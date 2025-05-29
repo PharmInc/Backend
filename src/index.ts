@@ -1,4 +1,3 @@
-import { serve } from "@hono/node-server";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 import { jwt } from "hono/jwt";
@@ -71,6 +70,8 @@ app.doc("/openapi", {
 
 app.get("/docs", swaggerUI({ url: "/openapi" }));
 
-const port = 3000;
-console.log(`Server is running on http://localhost:${port}`);
-serve({ fetch: app.fetch, port, hostname: "0.0.0.0" });
+export default app;
+
+// const port = 3000;
+// console.log(`Server is running on http://localhost:${port}`);
+// serve({ fetch: app.fetch, port, hostname: "0.0.0.0" });

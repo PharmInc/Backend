@@ -2,7 +2,7 @@
   "name": "hono-api-template",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch server.ts",
     "build": "rm -rf dist/ && tsc",
     "start": "node dist/index.js",
     "generate": "prisma generate",
