@@ -2,15 +2,13 @@
   "version": 2,
   "functions": {
     "api/index.ts": {
-      "runtime": "nodejs18.x",
-      "memory": 1024,
-      "maxDuration": 30
+      "runtime": "nodejs20.x"
     }
   },
   "routes": [
     {
-      "src": "/.*",
-      "dest": "api/index.ts"
+      "src": "/(.*)",
+      "dest": "/api/index.ts"
     }
   ]
 }
