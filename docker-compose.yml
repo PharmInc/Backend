@@ -1,53 +1,70 @@
 services:
-  api:
-    container_name: service-api
-    build:
-      context: .
-    ports:
-      - "${PORT:-3000}:3000"
-    environment:
-      DATABASE_URL: "postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@database:${DATABASE_PORT:-5432}/${DATABASE_NAME}?schema=public"
-      CACHE_URL: "redis://${CACHE_USERNAME}:${CACHE_PASSWORD}@cache:${CACHE_PORT:-6379}"
-    depends_on:
-      cache:
-        condition: service_started
-      database:
-        condition: service_healthy
-
   cache:
     container_name: service-cache
     image: redis:6.2-alpine
-    restart: always
+    restart: unless-stopped
     ports:
       - "${CACHE_PORT:-6379}:6379"
     environment:
-      REDIS_PASSWORD: ${CACHE_PASSWORD}
-      REDIS_USERNAME: ${CACHE_USERNAME}
+      REDIS_PASSWORD: ${CACHE_PASSWORD:?}
+      REDIS_USERNAME: ${CACHE_USERNAME:?}
+    command:
+      - /bin/sh
+      - -c
+      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+    volumes:
+      - ${CACHE_VOLUME:?}:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 1s
       timeout: 3s
       retries: 5
-    command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$${CACHE_PASSWORD:?REDIS_PASSWORD variable is not set}"
-    volumes: 
-      - ${CACHE_VOLUME:-cache_data}:/data
 
   database:
     container_name: service-database
     image: postgres:15-alpine
+    restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "${DATABASE_PORT:-5432}:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER:?}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+      POSTGRES_DB: ${POSTGRES_DB:?}
     volumes:
-      - ${DATABASE_VOLUME:-pg_data}:/var/lib/postgresql/data
+      - ${DATABASE_VOLUME:?}:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} || exit 1"]
       interval: 5s
       timeout: 5s
       retries: 5
+
+  object-storage:
+    container_name: service-object-storage
+    image: minio/minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    ports:
+      - "${OBJECT_STORAGE_PORT:-9000}:9000"
+      - "${OBJECT_STORAGE_CONSOLE_PORT:-9001}:9001"
+    environment:
+      MINIO_ROOT_USER: ${OBJECT_STORAGE_ROOT_USER:?}
+      MINIO_ROOT_PASSWORD: ${OBJECT_STORAGE_ROOT_PASSWORD:?}
+    volumes:
+      - ${OBJECT_STORAGE_VOLUME:?}/minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  object-storage-provision:
+    container_name: service-object-storage-provision
+    image: minio/mc
+    entrypoint: sh /minio-provision.sh
+    depends_on:
+      - object-storage
+    volumes:
+      - ${OBJECT_STORAGE_VOLUME:?}/minio-provision.sh:/minio-provision.sh:ro
+      - ${OBJECT_STORAGE_VOLUME:?}/lifecycle_expiry.json:/lifecycle_expiry.json:ro
+      - ${OBJECT_STORAGE_VOLUME:?}/bucket_policy.json:/bucket_policy.json:ro
+      - ${OBJECT_STORAGE_VOLUME:?}/minio-data:/data

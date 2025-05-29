@@ -18,7 +18,7 @@ export default [
       "schema.prisma",
       "Dockerfile",
       "docker-compose.yml",
-      ".env.copy",
+      ".env.sample",
       ".env",
       "deploy.yml",
       "migration.sql",
