@@ -5,7 +5,6 @@
     "dev": "tsx watch server.ts",
     "build": "prisma generate",
     "start": "node dist/index.js",
-    "generate": "prisma generate",
     "lint": "eslint src --ext .ts",
     "prepare": "husky",
     "postinstall": "prisma generate"
