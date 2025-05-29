@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch server.ts",
-    "build": "prisma generate",
+    "build": "echo 'no build needed'",
     "start": "node dist/index.js",
     "generate": "prisma generate",
     "lint": "eslint src --ext .ts",
