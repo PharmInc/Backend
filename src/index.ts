@@ -6,6 +6,7 @@ import { cors } from "hono/cors";
 import { type JwtVariables } from "hono/jwt";
 
 import authRouter from "./routes/auth/index.js";
+import userRouter from "./routes/user/index.js";
 
 type Variables = JwtVariables;
 
@@ -23,10 +24,24 @@ app.openAPIRegistry.registerComponent("securitySchemes", "Bearer", {
   scheme: "bearer",
 });
 app.use("*", cors({ origin: process.env.ALLOWED_ORIGINS?.split(",") || [] }));
-app.use("/jwt/*", jwt({ secret })); // Protect auth routes
+
+app.use("*", async (c, next) => {
+  const path = c.req.path;
+
+  const isPublic =
+    path.startsWith("/auth") || path === "/openapi" || path === "/docs";
+
+  if (isPublic) {
+    return next();
+  }
+
+  // Apply JWT if route is not public
+  return jwt({ secret })(c, next);
+});
 
 // imported routes
 app.route("/auth", authRouter);
+app.route("/user", userRouter);
 
 // Routes
 app.get("/", (c) => c.text("Server is alive!"));
