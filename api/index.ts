@@ -1,4 +1,4 @@
-// api/index.ts
+import { handle } from "hono/vercel";
 import app from "../src/index";
 
-export default app;
+export default handle(app);
