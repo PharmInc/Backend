@@ -16,3 +16,4 @@ migration_lock.toml
 init.sh
 .dockerignore
 LICENSE
+prisma

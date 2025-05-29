@@ -26,6 +26,7 @@ export default [
       "init.sh",
       ".dockerignore",
       "LICENSE",
+      "prisma/**/*",
     ],
     files: ["**/*.{js,mjs,cjs,ts,tsx}"],
     languageOptions: {

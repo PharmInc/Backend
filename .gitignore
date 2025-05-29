@@ -29,5 +29,3 @@ lerna-debug.log*
 
 # build
 dist/
-
-generated/
