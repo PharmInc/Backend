@@ -31,6 +31,9 @@ importers:
       pino:
         specifier: ^9.7.0
         version: 9.7.0
+      prisma:
+        specifier: ^6.8.2
+        version: 6.8.2(typescript@5.8.3)
       redis:
         specifier: ^5.1.1
         version: 5.1.1
@@ -68,9 +71,6 @@ importers:
       prettier:
         specifier: ^3.5.3
         version: 3.5.3
-      prisma:
-        specifier: ^6.8.2
-        version: 6.8.2(typescript@5.8.3)
       tsx:
         specifier: ^4.19.4
         version: 4.19.4
