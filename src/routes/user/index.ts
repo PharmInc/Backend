@@ -1,7 +1,7 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { v4 as uuidv4 } from "uuid";
-import logger from "../../lib/logging-client";
-import { createUser, getUser, updateUser, deleteUser } from "./route";
+import logger from "../../lib/logging-client.js";
+import { createUser, getUser, updateUser, deleteUser } from "./route.js";
 
 import db from "../../lib/drizzle-client.js";
 import { eq } from "drizzle-orm";
