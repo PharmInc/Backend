@@ -59,6 +59,7 @@ export const updateUserEducation = createRoute({
       },
     },
   },
+  security: [{ Bearer: [] }],
   responses: {
     200: { description: "Updated" },
     404: { description: "Not found" },
@@ -74,6 +75,7 @@ export const deleteUserEducation = createRoute({
       id: z.string().uuid(),
     }),
   },
+  security: [{ Bearer: [] }],
   responses: {
     204: { description: "Deleted" },
     404: { description: "Not found" },

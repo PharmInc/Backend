@@ -8,7 +8,9 @@ export const createUserEducationSchema = z.object({
   institutionId: z.string().uuid().openapi({ example: "institution-uuid" }),
 });
 
-export const userEducationSchema = createUserEducationSchema.extend({
-  id: z.string().uuid(),
-  userId: z.string().uuid(),
-});
+export const userEducationSchema = createUserEducationSchema
+  .extend({
+    id: z.string().uuid(),
+    userId: z.string().uuid(),
+  })
+  .openapi("userEducationSchema");

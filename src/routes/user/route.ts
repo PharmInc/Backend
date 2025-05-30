@@ -34,7 +34,6 @@ export const getUser = createRoute({
       id: z.string().uuid(),
     }),
   },
-  security: [{ Bearer: [] }],
   responses: {
     200: {
       description: "User found",
