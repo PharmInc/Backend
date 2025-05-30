@@ -7,6 +7,7 @@ import "dotenv/config";
 
 import authRouter from "./routes/auth/index";
 import userRouter from "./routes/user/index";
+import institutionRouter from "./routes/institution/index";
 
 type Variables = JwtVariables;
 
@@ -42,6 +43,7 @@ app.use("*", async (c, next) => {
 // imported routes
 app.route("/auth", authRouter);
 app.route("/user", userRouter);
+app.route("/institution", institutionRouter);
 
 // Routes
 app.get("/", (c) => c.text("Server is alive!"));
@@ -72,7 +74,3 @@ app.doc("/openapi", {
 app.get("/docs", swaggerUI({ url: "/openapi" }));
 
 export default app;
-
-// const port = 3000;
-// console.log(`Server is running on http://localhost:${port}`);
-// serve({ fetch: app.fetch, port, hostname: "0.0.0.0" });

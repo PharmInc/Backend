@@ -51,8 +51,8 @@ importers:
         specifier: ^5.0.2
         version: 5.0.2
       "@types/node":
-        specifier: ^22.15.27
-        version: 22.15.27
+        specifier: ^22.15.28
+        version: 22.15.28
       "@types/pg":
         specifier: ^8.15.2
         version: 8.15.2
@@ -779,10 +779,10 @@ packages:
         integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==,
       }
 
-  "@types/node@22.15.27":
+  "@types/node@22.15.28":
     resolution:
       {
-        integrity: sha512-5fF+eu5mwihV2BeVtX5vijhdaZOfkQTATrePEaXTcKqI16LhJ7gi2/Vhd9OZM0UojcdmiOCVg5rrax+i1MdoQQ==,
+        integrity: sha512-I0okKVDmyKR281I0UIFV7EWAWRnR0gkuSKob5wVcByyyhr7Px/slhkQapcYX4u00ekzNWaS1gznKZnuzxwo4pw==,
       }
 
   "@types/pg@8.15.2":
@@ -2997,19 +2997,19 @@ snapshots:
 
   "@types/bcrypt@5.0.2":
     dependencies:
-      "@types/node": 22.15.27
+      "@types/node": 22.15.28
 
   "@types/estree@1.0.7": {}
 
   "@types/json-schema@7.0.15": {}
 
-  "@types/node@22.15.27":
+  "@types/node@22.15.28":
     dependencies:
       undici-types: 6.21.0
 
   "@types/pg@8.15.2":
     dependencies:
-      "@types/node": 22.15.27
+      "@types/node": 22.15.28
       pg-protocol: 1.10.0
       pg-types: 4.0.2
 
