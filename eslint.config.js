@@ -26,8 +26,11 @@ export default [
       "init.sh",
       ".dockerignore",
       "LICENSE",
+      "db",
+      "supabase",
+      "schema.ts",
     ],
-    files: ["**/*.{js,mjs,cjs,ts,tsx}"],
+    files: ["src/**/*.{js,mjs,cjs,ts,tsx}"],
     languageOptions: {
       parser: tsParser,
       parserOptions: {

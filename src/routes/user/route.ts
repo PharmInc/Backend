@@ -1,5 +1,5 @@
 import { z, createRoute } from "@hono/zod-openapi";
-import { userSchema } from "./models.js";
+import { userSchema, createUserSchema } from "./models.js";
 
 export const createUser = createRoute({
   method: "post",
@@ -9,7 +9,7 @@ export const createUser = createRoute({
     body: {
       content: {
         "application/json": {
-          schema: userSchema,
+          schema: createUserSchema,
         },
       },
     },
@@ -20,6 +20,7 @@ export const createUser = createRoute({
       description: "User created",
     },
     400: { description: "Bad request" },
+    404: { description: "Auth not found" },
   },
 });
 

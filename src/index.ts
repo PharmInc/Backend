@@ -3,6 +3,7 @@ import { swaggerUI } from "@hono/swagger-ui";
 import { jwt } from "hono/jwt";
 import { cors } from "hono/cors";
 import { type JwtVariables } from "hono/jwt";
+import "dotenv/config";
 
 import authRouter from "./routes/auth/index.js";
 import userRouter from "./routes/user/index.js";

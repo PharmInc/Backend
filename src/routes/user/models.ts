@@ -1,5 +1,11 @@
 import { z } from "@hono/zod-openapi";
 
+export const createUserSchema = z.object({
+  firstName: z.string().openapi({ example: "John" }),
+  lastName: z.string().openapi({ example: "Doe" }),
+  specialization: z.string().openapi({ example: "Cardiology" }),
+});
+
 export const userSchema = z
   .object({
     firstName: z.string().openapi({ example: "John" }),
