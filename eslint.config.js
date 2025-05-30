@@ -7,29 +7,6 @@ import prettierConfig from "eslint-config-prettier";
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   {
-    ignores: [
-      "node_modules",
-      "dist",
-      "build",
-      ".eslintignore",
-      ".gitignore",
-      "pre-commit",
-      ".prettierignore",
-      "schema.prisma",
-      "Dockerfile",
-      "docker-compose.yml",
-      ".env.sample",
-      ".env",
-      "deploy.yml",
-      "migration.sql",
-      "migration_lock.toml",
-      "init.sh",
-      ".dockerignore",
-      "LICENSE",
-      "db",
-      "supabase",
-      "schema.ts",
-    ],
     files: ["src/**/*.{js,mjs,cjs,ts,tsx}"],
     languageOptions: {
       parser: tsParser,
