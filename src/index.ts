@@ -8,6 +8,7 @@ import "dotenv/config";
 import authRouter from "./routes/auth/index";
 import userRouter from "./routes/user/index";
 import institutionRouter from "./routes/institution/index";
+import userEducationRouter from "./routes/userEducation/index";
 
 type Variables = JwtVariables;
 
@@ -44,6 +45,7 @@ app.use("*", async (c, next) => {
 app.route("/auth", authRouter);
 app.route("/user", userRouter);
 app.route("/institution", institutionRouter);
+app.route("/institution/education", userEducationRouter);
 
 // Routes
 app.get("/", (c) => c.text("Server is alive!"));
