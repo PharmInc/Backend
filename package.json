@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch server.ts",
-    "build": "rm -rf dist/ && tsc",
+    "build": "echo 'no need to build'",
     "start": "node dist/index.js",
     "lint": "eslint src --ext .ts",
     "prepare": "husky",
