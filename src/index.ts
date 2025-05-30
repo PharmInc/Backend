@@ -65,7 +65,7 @@ app.doc("/openapi", {
   openapi: "3.0.0",
   info: {
     version: "0.0.1",
-    title: "JWT Management API",
+    title: "PharmInc API",
   },
 });
 
