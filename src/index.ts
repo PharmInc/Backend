@@ -5,8 +5,8 @@ import { cors } from "hono/cors";
 import { type JwtVariables } from "hono/jwt";
 import "dotenv/config";
 
-import authRouter from "./routes/auth/index.js";
-import userRouter from "./routes/user/index.js";
+import authRouter from "./routes/auth/index";
+import userRouter from "./routes/user/index";
 
 type Variables = JwtVariables;
 

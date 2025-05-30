@@ -3,8 +3,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch server.ts",
-    "build": "echo 'no need to build'",
-    "start": "node dist/index.js",
+    "start": "node ./dist/server.js",
+    "build": "rm -rf /dist && tsc && tsc-alias",
     "lint": "eslint src --ext .ts",
     "prepare": "husky",
     "generate": "drizzle-kit generate",
@@ -40,6 +40,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0",
