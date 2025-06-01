@@ -26,7 +26,7 @@ app.openAPIRegistry.registerComponent("securitySchemes", "Bearer", {
   type: "http",
   scheme: "bearer",
 });
-app.use("*", cors({ origin: process.env.ALLOWED_ORIGINS?.split(",") || [] }));
+app.use("*", cors());
 
 app.use("*", async (c, next) => {
   const path = c.req.path;
