@@ -1,34 +1,30 @@
 import { z, createRoute } from "@hono/zod-openapi";
-import { userSchema, createUserSchema } from "./models";
+import { createUserExperienceSchema, userExperienceSchema } from "./models";
 
-export const createUser = createRoute({
+export const createUserExperience = createRoute({
   method: "post",
   path: "/",
-  tags: ["User"],
+  tags: ["UserExperience"],
   request: {
     body: {
       content: {
         "application/json": {
-          schema: createUserSchema,
+          schema: createUserExperienceSchema,
         },
       },
     },
   },
   security: [{ Bearer: [] }],
   responses: {
-    201: {
-      description: "User created",
-    },
-    400: { description: "Bad request" },
-    404: { description: "Auth not found" },
+    201: { description: "Experience created" },
+    404: { description: "User not found" },
   },
 });
 
-export const getUser = createRoute({
+export const getUserExperience = createRoute({
   method: "get",
   path: "/{id}",
-  description: "Get user by ID",
-  tags: ["User"],
+  tags: ["UserExperience"],
   request: {
     params: z.object({
       id: z.string().uuid(),
@@ -36,21 +32,21 @@ export const getUser = createRoute({
   },
   responses: {
     200: {
-      description: "User found",
+      description: "Experience found",
       content: {
         "application/json": {
-          schema: userSchema.extend({ id: z.string().uuid() }),
+          schema: userExperienceSchema,
         },
       },
     },
-    404: { description: "User not found" },
+    404: { description: "Not found" },
   },
 });
 
-export const updateUser = createRoute({
+export const updateUserExperience = createRoute({
   method: "put",
   path: "/{id}",
-  tags: ["User"],
+  tags: ["UserExperience"],
   request: {
     params: z.object({
       id: z.string().uuid(),
@@ -58,22 +54,22 @@ export const updateUser = createRoute({
     body: {
       content: {
         "application/json": {
-          schema: userSchema.partial(),
+          schema: createUserExperienceSchema.partial(),
         },
       },
     },
   },
   security: [{ Bearer: [] }],
   responses: {
-    200: { description: "User updated" },
-    404: { description: "User not found" },
+    200: { description: "Updated" },
+    404: { description: "Not found" },
   },
 });
 
-export const deleteUser = createRoute({
+export const deleteUserExperience = createRoute({
   method: "delete",
   path: "/{id}",
-  tags: ["User"],
+  tags: ["UserExperience"],
   request: {
     params: z.object({
       id: z.string().uuid(),
@@ -81,7 +77,7 @@ export const deleteUser = createRoute({
   },
   security: [{ Bearer: [] }],
   responses: {
-    204: { description: "User deleted" },
-    404: { description: "User not found" },
+    204: { description: "Deleted" },
+    404: { description: "Not found" },
   },
 });

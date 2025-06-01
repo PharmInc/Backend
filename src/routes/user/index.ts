@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import logger from "../../lib/logging-client";
 import { createUser, getUser, updateUser, deleteUser } from "./route";
 
-import db from "../../lib/drizzle-client.js";
+import db from "../../lib/drizzle-client";
 import { eq } from "drizzle-orm";
 import {
   authTable,

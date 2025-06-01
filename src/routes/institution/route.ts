@@ -1,34 +1,30 @@
 import { z, createRoute } from "@hono/zod-openapi";
-import { userSchema, createUserSchema } from "./models";
+import { institutionSchema, createInstitutionSchema } from "./models";
 
-export const createUser = createRoute({
+export const createInstitution = createRoute({
   method: "post",
   path: "/",
-  tags: ["User"],
+  tags: ["Institution"],
   request: {
     body: {
       content: {
         "application/json": {
-          schema: createUserSchema,
+          schema: createInstitutionSchema,
         },
       },
     },
   },
   security: [{ Bearer: [] }],
   responses: {
-    201: {
-      description: "User created",
-    },
+    201: { description: "Institution created" },
     400: { description: "Bad request" },
-    404: { description: "Auth not found" },
   },
 });
 
-export const getUser = createRoute({
+export const getInstitution = createRoute({
   method: "get",
   path: "/{id}",
-  description: "Get user by ID",
-  tags: ["User"],
+  tags: ["Institution"],
   request: {
     params: z.object({
       id: z.string().uuid(),
@@ -36,21 +32,21 @@ export const getUser = createRoute({
   },
   responses: {
     200: {
-      description: "User found",
+      description: "Institution found",
       content: {
         "application/json": {
-          schema: userSchema.extend({ id: z.string().uuid() }),
+          schema: institutionSchema,
         },
       },
     },
-    404: { description: "User not found" },
+    404: { description: "Institution not found" },
   },
 });
 
-export const updateUser = createRoute({
+export const updateInstitution = createRoute({
   method: "put",
   path: "/{id}",
-  tags: ["User"],
+  tags: ["Institution"],
   request: {
     params: z.object({
       id: z.string().uuid(),
@@ -58,22 +54,22 @@ export const updateUser = createRoute({
     body: {
       content: {
         "application/json": {
-          schema: userSchema.partial(),
+          schema: institutionSchema.partial(),
         },
       },
     },
   },
   security: [{ Bearer: [] }],
   responses: {
-    200: { description: "User updated" },
-    404: { description: "User not found" },
+    200: { description: "Institution updated" },
+    404: { description: "Institution not found" },
   },
 });
 
-export const deleteUser = createRoute({
+export const deleteInstitution = createRoute({
   method: "delete",
   path: "/{id}",
-  tags: ["User"],
+  tags: ["Institution"],
   request: {
     params: z.object({
       id: z.string().uuid(),
@@ -81,7 +77,7 @@ export const deleteUser = createRoute({
   },
   security: [{ Bearer: [] }],
   responses: {
-    204: { description: "User deleted" },
-    404: { description: "User not found" },
+    204: { description: "Institution deleted" },
+    404: { description: "Institution not found" },
   },
 });

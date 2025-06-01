@@ -5,8 +5,11 @@ import { cors } from "hono/cors";
 import { type JwtVariables } from "hono/jwt";
 import "dotenv/config";
 
-import authRouter from "./routes/auth/index.js";
-import userRouter from "./routes/user/index.js";
+import authRouter from "./routes/auth/index";
+import userRouter from "./routes/user/index";
+import institutionRouter from "./routes/institution/index";
+import userEducationRouter from "./routes/userEducation/index";
+import userExperienceRouter from "./routes/userExperience/index";
 
 type Variables = JwtVariables;
 
@@ -23,7 +26,7 @@ app.openAPIRegistry.registerComponent("securitySchemes", "Bearer", {
   type: "http",
   scheme: "bearer",
 });
-app.use("*", cors({ origin: process.env.ALLOWED_ORIGINS?.split(",") || [] }));
+app.use("*", cors());
 
 app.use("*", async (c, next) => {
   const path = c.req.path;
@@ -42,6 +45,9 @@ app.use("*", async (c, next) => {
 // imported routes
 app.route("/auth", authRouter);
 app.route("/user", userRouter);
+app.route("/institution", institutionRouter);
+app.route("/user/education", userEducationRouter);
+app.route("/user/experience", userExperienceRouter);
 
 // Routes
 app.get("/", (c) => c.text("Server is alive!"));
@@ -65,14 +71,10 @@ app.doc("/openapi", {
   openapi: "3.0.0",
   info: {
     version: "0.0.1",
-    title: "JWT Management API",
+    title: "PharmInc API",
   },
 });
 
 app.get("/docs", swaggerUI({ url: "/openapi" }));
 
 export default app;
-
-// const port = 3000;
-// console.log(`Server is running on http://localhost:${port}`);
-// serve({ fetch: app.fetch, port, hostname: "0.0.0.0" });
