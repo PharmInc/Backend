@@ -1,25 +1,4 @@
 services:
-  cache:
-    container_name: service-cache
-    image: redis:6.2-alpine
-    restart: unless-stopped
-    ports:
-      - "${CACHE_PORT:-6379}:6379"
-    environment:
-      REDIS_PASSWORD: ${CACHE_PASSWORD:?}
-      REDIS_USERNAME: ${CACHE_USERNAME:?}
-    command:
-      - /bin/sh
-      - -c
-      - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
-    volumes:
-      - ${CACHE_VOLUME:?}:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 1s
-      timeout: 3s
-      retries: 5
-
   database:
     container_name: service-database
     image: postgres:15-alpine

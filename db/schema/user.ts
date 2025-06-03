@@ -1,5 +1,6 @@
 import { pgTable, uuid, timestamp, text } from "drizzle-orm/pg-core";
 import { authTable } from "./auth";
+import { z } from "@hono/zod-openapi";
 
 export const userTable = pgTable("user", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -19,5 +20,18 @@ export const userTable = pgTable("user", {
     .references(() => authTable.id, { onDelete: "cascade" }),
 });
 
-export type InsertUser = typeof userTable.$inferInsert;
-export type SelectUser = typeof userTable.$inferSelect;
+export const createUserSchema = z.object({
+  firstName: z.string().openapi({ example: "John" }),
+  lastName: z.string().openapi({ example: "Doe" }),
+  specialization: z.string().openapi({ example: "Cardiology" }),
+});
+
+export const userSchema = createUserSchema
+  .extend({
+    id: z.string().uuid(),
+    email: z.string().email().openapi({ example: "example@example.com" }),
+    profilePicture: z.string().optional(),
+    about: z.string().optional(),
+    authId: z.string().uuid().optional(),
+  })
+  .openapi("userSchema");

@@ -1,4 +1,5 @@
 import { pgTable, uuid, timestamp, text } from "drizzle-orm/pg-core";
+import { z } from "@hono/zod-openapi";
 
 export const institutionTable = pgTable("institution", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -11,5 +12,15 @@ export const institutionTable = pgTable("institution", {
   location: text("location"),
 });
 
-export type InsertInstitution = typeof institutionTable.$inferInsert;
-export type SelectInstitution = typeof institutionTable.$inferSelect;
+export const createInstitutionSchema = z.object({
+  name: z.string().openapi({ example: "AIIMS Delhi" }),
+  about: z.string().openapi({ example: "Premier medical institute" }),
+  location: z.string().openapi({ example: "New Delhi, India" }),
+});
+
+export const institutionSchema = createInstitutionSchema
+  .extend({
+    id: z.string().uuid(),
+    profilePicture: z.string().optional(),
+  })
+  .openapi("institutionSchema");

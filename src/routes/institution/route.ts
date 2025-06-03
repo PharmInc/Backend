@@ -1,5 +1,5 @@
 import { z, createRoute } from "@hono/zod-openapi";
-import { institutionSchema, createInstitutionSchema } from "./models";
+import { institutionSchema, createInstitutionSchema } from "@db/index";
 
 export const createInstitution = createRoute({
   method: "post",

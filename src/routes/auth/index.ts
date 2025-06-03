@@ -1,13 +1,13 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { v4 } from "uuid";
 import { sign } from "hono/jwt";
-import { checkPassword, hashPassword } from "./../../utils/passwords";
+import { checkPassword, hashPassword } from "@utils/passwords";
 import { login, register } from "./route";
-import logger from "../../lib/logging-client";
+import logger from "@lib/logging-client";
 
-import db from "../../lib/drizzle-client";
+import db from "@lib/drizzle-client";
 import { eq } from "drizzle-orm";
-import { authTable } from "../../../db/index";
+import { authTable } from "@db/index";
 
 const authRouter = new OpenAPIHono();
 

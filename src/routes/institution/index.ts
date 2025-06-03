@@ -1,9 +1,9 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { v4 as uuidv4 } from "uuid";
-import logger from "../../lib/logging-client";
-import db from "../../lib/drizzle-client";
+import logger from "@lib/logging-client";
+import db from "@lib/drizzle-client";
 import { eq } from "drizzle-orm";
-import { institutionTable } from "../../../db/index.js";
+import { institutionTable } from "@db/index";
 import {
   createInstitution,
   getInstitution,

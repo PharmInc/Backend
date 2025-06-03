@@ -1,6 +1,7 @@
 import { pgTable, uuid, timestamp, text } from "drizzle-orm/pg-core";
 import { userTable } from "./user";
 import { institutionTable } from "./institution";
+import { z } from "@hono/zod-openapi";
 
 export const userExperienceTable = pgTable("user_experience", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -20,5 +21,17 @@ export const userExperienceTable = pgTable("user_experience", {
   }),
 });
 
-export type InsertUserExperience = typeof userExperienceTable.$inferInsert;
-export type SelectUserExperience = typeof userExperienceTable.$inferSelect;
+export const createUserExperienceSchema = z.object({
+  title: z.string().openapi({ example: "Software Engineer" }),
+  description: z.string().openapi({ example: "Worked on backend APIs" }),
+  startDate: z.string().datetime().openapi({ example: "2021-01-01T00:00:00Z" }),
+  endDate: z.string().datetime().optional(),
+  institutionId: z.string().uuid().openapi({ example: "institution-uuid" }),
+});
+
+export const userExperienceSchema = createUserExperienceSchema
+  .extend({
+    id: z.string().uuid(),
+    userId: z.string().uuid(),
+  })
+  .openapi("userExperienceSchema");

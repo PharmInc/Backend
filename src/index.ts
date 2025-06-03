@@ -3,13 +3,14 @@ import { swaggerUI } from "@hono/swagger-ui";
 import { jwt } from "hono/jwt";
 import { cors } from "hono/cors";
 import { type JwtVariables } from "hono/jwt";
+import { serve } from "@hono/node-server";
 import "dotenv/config";
 
 import authRouter from "./routes/auth/index";
 import userRouter from "./routes/user/index";
 import institutionRouter from "./routes/institution/index";
-import userEducationRouter from "./routes/userEducation/index";
-import userExperienceRouter from "./routes/userExperience/index";
+import userEducationRouter from "./routes/user/userEducation/index";
+import userExperienceRouter from "./routes/user/userExperience/index";
 
 type Variables = JwtVariables;
 
@@ -77,4 +78,7 @@ app.doc("/openapi", {
 
 app.get("/docs", swaggerUI({ url: "/openapi" }));
 
-export default app;
+const port = 3000;
+console.log(`Server running at http://localhost:${port}`);
+
+serve({ fetch: app.fetch, port });

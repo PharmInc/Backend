@@ -1,4 +1,5 @@
 import { pgTable, uuid, timestamp, text } from "drizzle-orm/pg-core";
+import { z } from "@hono/zod-openapi";
 
 export const authTable = pgTable("auth", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -9,5 +10,9 @@ export const authTable = pgTable("auth", {
   password: text("password").notNull(),
 });
 
-export type InsertAuth = typeof authTable.$inferInsert;
-export type SelectAuth = typeof authTable.$inferSelect;
+export const authSchema = z
+  .object({
+    email: z.string().email().openapi({ example: "example@example.com" }),
+    password: z.string().openapi({ example: "password" }),
+  })
+  .openapi("authSchema");

@@ -1,16 +1,16 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { v4 as uuidv4 } from "uuid";
-import logger from "../../lib/logging-client";
+import logger from "@lib/logging-client";
 import { createUser, getUser, updateUser, deleteUser } from "./route";
 
-import db from "../../lib/drizzle-client";
+import db from "@lib/drizzle-client";
 import { eq } from "drizzle-orm";
 import {
   authTable,
   userTable,
   userExperienceTable,
   userEducationTable,
-} from "../../../db/index.js";
+} from "@db/index";
 
 const userRouter = new OpenAPIHono();
 

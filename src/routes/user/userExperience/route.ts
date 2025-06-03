@@ -1,30 +1,30 @@
 import { z, createRoute } from "@hono/zod-openapi";
-import { createUserEducationSchema, userEducationSchema } from "./models";
+import { createUserExperienceSchema, userExperienceSchema } from "@db/index";
 
-export const createUserEducation = createRoute({
+export const createUserExperience = createRoute({
   method: "post",
   path: "/",
-  tags: ["UserEducation"],
+  tags: ["UserExperience"],
   request: {
     body: {
       content: {
         "application/json": {
-          schema: createUserEducationSchema,
+          schema: createUserExperienceSchema,
         },
       },
     },
   },
   security: [{ Bearer: [] }],
   responses: {
-    201: { description: "Education created" },
+    201: { description: "Experience created" },
     404: { description: "User not found" },
   },
 });
 
-export const getUserEducation = createRoute({
+export const getUserExperience = createRoute({
   method: "get",
   path: "/{id}",
-  tags: ["UserEducation"],
+  tags: ["UserExperience"],
   request: {
     params: z.object({
       id: z.string().uuid(),
@@ -32,10 +32,10 @@ export const getUserEducation = createRoute({
   },
   responses: {
     200: {
-      description: "Education found",
+      description: "Experience found",
       content: {
         "application/json": {
-          schema: userEducationSchema,
+          schema: userExperienceSchema,
         },
       },
     },
@@ -43,10 +43,10 @@ export const getUserEducation = createRoute({
   },
 });
 
-export const updateUserEducation = createRoute({
+export const updateUserExperience = createRoute({
   method: "put",
   path: "/{id}",
-  tags: ["UserEducation"],
+  tags: ["UserExperience"],
   request: {
     params: z.object({
       id: z.string().uuid(),
@@ -54,7 +54,7 @@ export const updateUserEducation = createRoute({
     body: {
       content: {
         "application/json": {
-          schema: createUserEducationSchema.partial(),
+          schema: createUserExperienceSchema.partial(),
         },
       },
     },
@@ -66,10 +66,10 @@ export const updateUserEducation = createRoute({
   },
 });
 
-export const deleteUserEducation = createRoute({
+export const deleteUserExperience = createRoute({
   method: "delete",
   path: "/{id}",
-  tags: ["UserEducation"],
+  tags: ["UserExperience"],
   request: {
     params: z.object({
       id: z.string().uuid(),

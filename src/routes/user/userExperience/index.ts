@@ -1,19 +1,19 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { v4 as uuidv4 } from "uuid";
-import logger from "../../lib/logging-client";
-import db from "../../lib/drizzle-client";
+import logger from "@lib/logging-client";
+import db from "@lib/drizzle-client";
 import { eq } from "drizzle-orm";
 import {
-  createUserEducation,
-  getUserEducation,
-  updateUserEducation,
-  deleteUserEducation,
+  createUserExperience,
+  getUserExperience,
+  updateUserExperience,
+  deleteUserExperience,
 } from "./route";
-import { userEducationTable, userTable } from "../../../db";
+import { userExperienceTable, userTable } from "@db/index";
 
-const educationRouter = new OpenAPIHono();
+const experienceRouter = new OpenAPIHono();
 
-educationRouter.openapi(createUserEducation, async (ctx) => {
+experienceRouter.openapi(createUserExperience, async (ctx) => {
   const data = ctx.req.valid("json");
   const token = ctx.get("jwtPayload");
 
@@ -28,8 +28,8 @@ educationRouter.openapi(createUserEducation, async (ctx) => {
     return ctx.text("User not found", 404);
   }
 
-  const education = await db
-    .insert(userEducationTable)
+  const experience = await db
+    .insert(userExperienceTable)
     .values({
       id: uuidv4(),
       title: data.title,
@@ -42,57 +42,57 @@ educationRouter.openapi(createUserEducation, async (ctx) => {
     .returning()
     .then((rows) => rows[0]);
 
-  logger.info({ educationId: education.id }, "Education created");
-  return ctx.text("Education created", 201);
+  logger.info({ experienceId: experience.id }, "Experience created");
+  return ctx.text("Experience created", 201);
 });
 
-educationRouter.openapi(getUserEducation, async (ctx) => {
+experienceRouter.openapi(getUserExperience, async (ctx) => {
   const { id } = ctx.req.valid("param");
 
-  const education = await db
+  const experience = await db
     .select()
-    .from(userEducationTable)
-    .where(eq(userEducationTable.id, id))
+    .from(userExperienceTable)
+    .where(eq(userExperienceTable.id, id))
     .then((rows) => rows[0]);
 
-  if (!education) {
-    return ctx.text("Education not found", 404);
+  if (!experience) {
+    return ctx.text("Experience not found", 404);
   }
 
-  return ctx.json(education);
+  return ctx.json(experience);
 });
 
-educationRouter.openapi(updateUserEducation, async (ctx) => {
+experienceRouter.openapi(updateUserExperience, async (ctx) => {
   const { id } = ctx.req.valid("param");
   const data = ctx.req.valid("json");
 
   const updated = await db
-    .update(userEducationTable)
+    .update(userExperienceTable)
     .set({
       ...data,
       startDate: data.startDate ? new Date(data.startDate) : undefined,
       endDate: data.endDate ? new Date(data.endDate) : undefined,
       updatedAt: new Date(),
     })
-    .where(eq(userEducationTable.id, id))
+    .where(eq(userExperienceTable.id, id))
     .returning()
     .then((rows) => rows[0]);
 
   if (!updated) {
-    return ctx.text("Education not found", 404);
+    return ctx.text("Experience not found", 404);
   }
 
-  logger.info({ educationId: updated.id }, "Education updated");
-  return ctx.text("Education updated");
+  logger.info({ experienceId: updated.id }, "Experience updated");
+  return ctx.text("Experience updated");
 });
 
-educationRouter.openapi(deleteUserEducation, async (ctx) => {
+experienceRouter.openapi(deleteUserExperience, async (ctx) => {
   const { id } = ctx.req.valid("param");
 
-  await db.delete(userEducationTable).where(eq(userEducationTable.id, id));
+  await db.delete(userExperienceTable).where(eq(userExperienceTable.id, id));
 
-  logger.info({ educationId: id }, "Education deleted");
+  logger.info({ experienceId: id }, "Experience deleted");
   return ctx.body(null, 204);
 });
 
-export default educationRouter;
+export default experienceRouter;

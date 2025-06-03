@@ -1,5 +1,5 @@
 import { z, createRoute } from "@hono/zod-openapi";
-import { authSchema } from "./models";
+import { authSchema } from "@db/index";
 
 export const login = createRoute({
   method: "post",
