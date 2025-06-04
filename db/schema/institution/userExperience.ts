@@ -1,5 +1,5 @@
 import { pgTable, uuid, timestamp, text } from "drizzle-orm/pg-core";
-import { userTable } from "./user";
+import { userTable } from "../user";
 import { institutionTable } from "./institution";
 import { z } from "@hono/zod-openapi";
 

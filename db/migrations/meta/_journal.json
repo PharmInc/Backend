@@ -8,6 +8,13 @@
       "when": 1748965237890,
       "tag": "0000_loose_starbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1749072542579,
+      "tag": "0001_condemned_maggott",
+      "breakpoints": true
     }
   ]
 }
