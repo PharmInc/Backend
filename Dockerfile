@@ -2,7 +2,7 @@ FROM node:23-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml drizzle.config.ts ./
 RUN npm install -g pnpm && pnpm install
 
 COPY . .
