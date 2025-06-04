@@ -6,7 +6,6 @@ COPY package.json pnpm-lock.yaml drizzle.config.ts ./
 RUN npm install -g pnpm && pnpm install
 
 COPY . .
-RUN pnpm generate
 RUN pnpm run build
 
 FROM node:23-alpine
@@ -17,8 +16,11 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
+COPY --from=builder /app/drizzle.config.js ./
 
 RUN npm install -g pnpm && pnpm install --prod
+
+RUN pnpm generate
 
 EXPOSE 3000
 
