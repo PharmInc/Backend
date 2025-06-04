@@ -16,7 +16,7 @@ WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
-COPY --from=builder /app/drizzle.config.js ./
+COPY --from=builder /app/drizzle.config.ts ./
 
 RUN npm install -g pnpm && pnpm install --prod
 
