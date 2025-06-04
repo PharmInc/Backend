@@ -8,6 +8,14 @@ import "dotenv/config";
 
 import authRouter from "./routes/auth/index";
 import userRouter from "./routes/user/index";
+
+import postRouter from "./routes/post";
+import commentRouter from "./routes/comment";
+
+import tagRouter from "./routes/tag";
+import postTagRouter from "./routes/tag/postTag";
+import userTagRouter from "./routes/tag/userTag";
+
 import institutionRouter from "./routes/institution/index";
 import userEducationRouter from "./routes/user/userEducation/index";
 import userExperienceRouter from "./routes/user/userExperience/index";
@@ -46,9 +54,16 @@ app.use("*", async (c, next) => {
 // imported routes
 app.route("/auth", authRouter);
 app.route("/user", userRouter);
+app.route("/post", postRouter);
+app.route("/tag", tagRouter);
+app.route("/comment", commentRouter);
 app.route("/institution", institutionRouter);
+
 app.route("/user/education", userEducationRouter);
 app.route("/user/experience", userExperienceRouter);
+
+app.route("/post/tag", postTagRouter);
+app.route("/user/tag", userTagRouter);
 
 // Routes
 app.get("/", (c) => c.text("Server is alive!"));
