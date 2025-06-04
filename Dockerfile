@@ -6,6 +6,7 @@ COPY package.json pnpm-lock.yaml drizzle.config.ts ./
 RUN npm install -g pnpm && pnpm install
 
 COPY . .
+RUN pnpm generate
 RUN pnpm run build
 
 FROM node:23-alpine
