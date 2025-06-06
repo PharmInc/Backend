@@ -16,7 +16,14 @@ export const createComment = createRoute({
   },
   security: [{ Bearer: [] }],
   responses: {
-    201: { description: "Comment created" },
+    201: {
+      description: "Post created",
+      content: {
+        "application/json": {
+          schema: z.string().uuid(),
+        },
+      },
+    },
     400: { description: "Bad request" },
   },
 });

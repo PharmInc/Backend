@@ -33,7 +33,7 @@ commentRouter.openapi(createComment, async (ctx) => {
       .then((rows) => rows[0]);
 
     logger.info({ commentId: comment.id }, "Comment created");
-    return ctx.text("Comment created", 201);
+    return ctx.json({ commentId: comment.id }, 201);
   } catch (error) {
     logger.error({ error }, "Failed to create comment");
     return ctx.text("Failed to create comment", 400);

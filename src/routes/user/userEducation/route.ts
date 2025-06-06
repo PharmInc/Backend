@@ -16,7 +16,14 @@ export const createUserEducation = createRoute({
   },
   security: [{ Bearer: [] }],
   responses: {
-    201: { description: "Education created" },
+    201: {
+      description: "User education created",
+      content: {
+        "application/json": {
+          schema: z.string().uuid(),
+        },
+      },
+    },
     404: { description: "User not found" },
   },
 });

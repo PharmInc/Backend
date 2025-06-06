@@ -43,7 +43,7 @@ experienceRouter.openapi(createUserExperience, async (ctx) => {
     .then((rows) => rows[0]);
 
   logger.info({ experienceId: experience.id }, "Experience created");
-  return ctx.text("Experience created", 201);
+  return ctx.json({ experienceId: experience.id }, 201);
 });
 
 experienceRouter.openapi(getUserExperience, async (ctx) => {

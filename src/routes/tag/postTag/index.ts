@@ -29,7 +29,7 @@ postTagRouter.openapi(createPostTag, async (ctx) => {
       .then((rows) => rows[0]);
 
     logger.info({ id: created.id }, "Post-Tag relation created");
-    return ctx.text("Post-Tag relation created", 201);
+    return ctx.json({ postTagId: created.id }, 201);
   } catch (error) {
     logger.error({ error }, "Failed to create Post-Tag relation");
     return ctx.text("Failed to create Post-Tag relation", 400);

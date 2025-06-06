@@ -16,7 +16,14 @@ export const createUserTag = createRoute({
   },
   security: [{ Bearer: [] }],
   responses: {
-    201: { description: "User-Tag relation created" },
+    201: {
+      description: "User tag relation created",
+      content: {
+        "application/json": {
+          schema: z.string().uuid(),
+        },
+      },
+    },
     400: { description: "Bad request" },
   },
 });

@@ -23,7 +23,7 @@ tagRouter.openapi(createTag, async (ctx) => {
       .then((rows) => rows[0]);
 
     logger.info({ tagId: tag.id }, "Tag created");
-    return ctx.text("Tag created", 201);
+    return ctx.json({ tagId: tag.id }, 201);
   } catch (error) {
     logger.error({ error }, "Failed to create tag");
     return ctx.text("Failed to create tag", 400);

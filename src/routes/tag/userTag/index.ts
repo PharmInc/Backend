@@ -29,7 +29,7 @@ userTagRouter.openapi(createUserTag, async (ctx) => {
       .then((rows) => rows[0]);
 
     logger.info({ id: created.id }, "User-Tag relation created");
-    return ctx.text("User-Tag relation created", 201);
+    return ctx.json({ userTagId: created.id }, 201);
   } catch (error) {
     logger.error({ error }, "Failed to create User-Tag relation");
     return ctx.text("Failed to create User-Tag relation", 400);

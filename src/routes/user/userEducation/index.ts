@@ -43,7 +43,7 @@ educationRouter.openapi(createUserEducation, async (ctx) => {
     .then((rows) => rows[0]);
 
   logger.info({ educationId: education.id }, "Education created");
-  return ctx.text("Education created", 201);
+  return ctx.json({ educationId: education.id }, 201);
 });
 
 educationRouter.openapi(getUserEducation, async (ctx) => {

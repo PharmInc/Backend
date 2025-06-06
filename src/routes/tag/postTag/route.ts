@@ -16,7 +16,14 @@ export const createPostTag = createRoute({
   },
   security: [{ Bearer: [] }],
   responses: {
-    201: { description: "Post-Tag relation created" },
+    201: {
+      description: "Post-Tag relation created",
+      content: {
+        "application/json": {
+          schema: z.string().uuid(),
+        },
+      },
+    },
     400: { description: "Bad request" },
   },
 });

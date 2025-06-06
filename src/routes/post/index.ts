@@ -26,7 +26,7 @@ postRouter.openapi(createPost, async (ctx) => {
       .then((rows) => rows[0]);
 
     logger.info({ postId: post.id }, "Post created");
-    return ctx.text("Post created", 201);
+    return ctx.json({ postId: post.id }, 201);
   } catch (error) {
     logger.error({ error }, "Failed to create post");
     return ctx.text("Failed to create post", 400);

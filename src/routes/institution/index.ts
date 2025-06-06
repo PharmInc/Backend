@@ -29,7 +29,7 @@ institutionRouter.openapi(createInstitution, async (ctx) => {
       .then((rows) => rows[0]);
 
     logger.info({ institutionId: institution.id }, "Institution created");
-    return ctx.text("Institution created", 201);
+    return ctx.json({ institutionId: institution.id }, 201);
   } catch (error) {
     logger.error({ error }, "Failed to create institution");
     return ctx.text("Failed to create institution", 400);
