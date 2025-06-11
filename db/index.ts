@@ -1,5 +1,6 @@
 export * from "./schema/auth";
 export * from "./schema/user";
+export * from "./schema/connection";
 
 export * from "./schema/institution/institution";
 export * from "./schema/institution/userExperience";

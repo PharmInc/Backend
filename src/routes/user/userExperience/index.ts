@@ -9,24 +9,13 @@ import {
   updateUserExperience,
   deleteUserExperience,
 } from "./route";
-import { userExperienceTable, userTable } from "@db/index";
+import { userExperienceTable } from "@db/index";
 
 const experienceRouter = new OpenAPIHono();
 
 experienceRouter.openapi(createUserExperience, async (ctx) => {
   const data = ctx.req.valid("json");
   const token = ctx.get("jwtPayload");
-
-  const user = await db
-    .select()
-    .from(userTable)
-    .where(eq(userTable.email, token.email))
-    .then((rows) => rows[0]);
-
-  if (!user) {
-    logger.warn({ email: token.email }, "User not found");
-    return ctx.text("User not found", 404);
-  }
 
   const experience = await db
     .insert(userExperienceTable)
@@ -36,7 +25,7 @@ experienceRouter.openapi(createUserExperience, async (ctx) => {
       description: data.description,
       startDate: new Date(data.startDate),
       endDate: data.endDate ? new Date(data.endDate) : undefined,
-      userId: user.id,
+      userId: token.id,
       institutionId: data.institutionId,
     })
     .returning()

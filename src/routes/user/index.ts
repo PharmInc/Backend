@@ -1,5 +1,4 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { v4 as uuidv4 } from "uuid";
 import logger from "@lib/logging-client";
 import { createUser, getUser, updateUser, deleteUser } from "./route";
 
@@ -22,18 +21,18 @@ userRouter.openapi(createUser, async (ctx) => {
     const auth = await db
       .selectDistinct()
       .from(authTable)
-      .where(eq(authTable.email, token.email))
+      .where(eq(authTable.id, token.id))
       .then((rows) => rows[0]);
 
     if (!auth) {
-      logger.warn({ email: token.email }, "Auth record not found");
+      logger.warn({ userId: token.id }, "Auth record not found");
       return ctx.text("Auth record not found", 404);
     }
 
     const user = await db
       .insert(userTable)
       .values({
-        id: uuidv4(),
+        id: auth.id,
         firstName: data.firstName,
         lastName: data.lastName,
         email: auth.email,

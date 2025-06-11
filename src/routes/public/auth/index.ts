@@ -43,7 +43,7 @@ authRouter.openapi(login, async (ctx) => {
       process.env.JWT_SECRET
     );
 
-    logger.info({ userId: auth.id, email }, "Login successful");
+    logger.info({ id: auth.id, email }, "Login successful");
 
     return ctx.json(
       {

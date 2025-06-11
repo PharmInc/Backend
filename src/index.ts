@@ -12,13 +12,19 @@ import userRouter from "./routes/user/index";
 import postRouter from "./routes/post";
 import commentRouter from "./routes/comment";
 
-import tagRouter from "./routes/tag";
-import postTagRouter from "./routes/tag/postTag";
-import userTagRouter from "./routes/tag/userTag";
-
 import institutionRouter from "./routes/institution/index";
 import userEducationRouter from "./routes/user/userEducation/index";
 import userExperienceRouter from "./routes/user/userExperience/index";
+import connectionRouter from "./routes/connection";
+
+import { default as pubUserRouter } from "./routes/public/user/index";
+
+import { default as pubPostRouter } from "./routes/public/post";
+import { default as pubCommentRouter } from "./routes/public/comment";
+
+import { default as pubInstitutionRouter } from "./routes/public/institution/index";
+import { default as pubUserEducationRouter } from "./routes/public/user/userEducation/index";
+import { default as pubUserExperienceRouter } from "./routes/public/user/userExperience/index";
 
 type Variables = JwtVariables;
 
@@ -55,15 +61,21 @@ app.use("*", async (c, next) => {
 app.route("/auth", authRouter);
 app.route("/user", userRouter);
 app.route("/post", postRouter);
-app.route("/tag", tagRouter);
 app.route("/comment", commentRouter);
 app.route("/institution", institutionRouter);
+app.route("/connection", connectionRouter);
 
 app.route("/user/education", userEducationRouter);
 app.route("/user/experience", userExperienceRouter);
 
-app.route("/post/tag", postTagRouter);
-app.route("/user/tag", userTagRouter);
+// public routes
+app.route("/public", pubUserRouter);
+app.route("/public", pubPostRouter);
+app.route("/public", pubCommentRouter);
+app.route("/public", pubInstitutionRouter);
+
+app.route("/public", pubUserEducationRouter);
+app.route("/public", pubUserExperienceRouter);
 
 // Routes
 app.get("/", (c) => c.text("Server is alive!"));
