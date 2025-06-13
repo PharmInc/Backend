@@ -1,0 +1,7 @@
+# environment variables
+.env
+.env.*
+!.env.sample
+
+# downloads
+node_modules/

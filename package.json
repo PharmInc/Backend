@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "The main entry point that houses the core backend along with its deployment",
+  "author": {
+    "name": "Pharminc",
+    "email": "pharminc.info@gmail.com"
+  },
+  "type": "module",
+  "scripts": {
+    "generate": "drizzle-kit generate",
+    "dbpull": "drizzle-kit pull",
+    "dbpush": "drizzle-kit push"
+  },
+  "dependencies": {
+    "drizzle-kit": "^0.31.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.1"
+  }
+}
