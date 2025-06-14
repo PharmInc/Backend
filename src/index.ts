@@ -15,7 +15,8 @@ import commentRouter from "./routes/comment";
 import institutionRouter from "./routes/institution/index";
 import userEducationRouter from "./routes/user/userEducation/index";
 import userExperienceRouter from "./routes/user/userExperience/index";
-import connectionRouter from "./routes/connection";
+import connectionRouter from "./routes/connection/index";
+import followRouter from "./routes/follow/index";
 
 import { default as pubUserRouter } from "./routes/public/user/index";
 
@@ -64,6 +65,7 @@ app.route("/post", postRouter);
 app.route("/comment", commentRouter);
 app.route("/institution", institutionRouter);
 app.route("/connection", connectionRouter);
+app.route("/follow", followRouter);
 
 app.route("/user/education", userEducationRouter);
 app.route("/user/experience", userExperienceRouter);

@@ -2,9 +2,15 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { v4 as uuidv4 } from "uuid";
 import logger from "@lib/logging-client";
 import db from "@lib/drizzle-client";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 
-import { createConnection, deleteConnection, getConnection } from "./route";
+import {
+  createConnection,
+  deleteConnection,
+  getConnection,
+  acceptConnection,
+  getAcceptedConnections,
+} from "./route";
 import { connectionsTable, userTable } from "@db/index";
 
 const connectionRouter = new OpenAPIHono();
@@ -72,6 +78,56 @@ connectionRouter.openapi(getConnection, async (ctx) => {
   }
 
   return ctx.json(connection);
+});
+
+connectionRouter.openapi(acceptConnection, async (ctx) => {
+  const { id } = ctx.req.valid("param");
+  const token = ctx.get("jwtPayload");
+
+  try {
+    const updated = await db
+      .update(connectionsTable)
+      .set({ accepted: true })
+      .where(
+        and(
+          eq(connectionsTable.id, id),
+          eq(connectionsTable.connectorId, token.id) // only the recipient can accept
+        )
+      )
+      .returning()
+      .then((rows) => rows[0]);
+
+    if (!updated) {
+      return ctx.text("Connection not found or unauthorized", 404);
+    }
+
+    logger.info({ connectionId: id }, "Connection accepted");
+    return ctx.text("Connection accepted", 200);
+  } catch (err) {
+    logger.error({ error: err }, "Failed to accept connection");
+    return ctx.text("Failed to accept connection", 400);
+  }
+});
+
+// Get all accepted connections
+connectionRouter.openapi(getAcceptedConnections, async (ctx) => {
+  const token = ctx.get("jwtPayload");
+
+  const connections = await db
+    .select()
+    .from(connectionsTable)
+    .where(
+      and(
+        eq(connectionsTable.userId, token.id),
+        eq(connectionsTable.accepted, true)
+      )
+    );
+
+  if (!connections || connections.length === 0) {
+    return ctx.text("No accepted connections found", 404);
+  }
+
+  return ctx.json(connections);
 });
 
 export default connectionRouter;
