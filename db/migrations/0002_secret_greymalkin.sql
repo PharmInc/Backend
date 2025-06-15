@@ -1,0 +1,22 @@
+CREATE TABLE "institution" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now(),
+	"updated_at" timestamp with time zone DEFAULT now(),
+	"name" text NOT NULL,
+	"location" text NOT NULL,
+	"type" text NOT NULL,
+	"email" text NOT NULL,
+	"boolean" boolean DEFAULT false,
+	"employees_count" text,
+	"area_of_expertise" text,
+	"profile_picture" text,
+	"banner_picture" text,
+	"contact_email" text,
+	"contact_number" text,
+	"bio" text,
+	"about" text,
+	"followers" integer DEFAULT 0,
+	"connections" integer DEFAULT 0,
+	CONSTRAINT "institution_name_unique" UNIQUE("name"),
+	CONSTRAINT "institution_email_unique" UNIQUE("email")
+);

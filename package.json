@@ -1,6 +1,6 @@
 {
   "name": "backend",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "description": "The main entry point that houses the core backend along with its deployment",
   "author": {
     "name": "Pharminc",
