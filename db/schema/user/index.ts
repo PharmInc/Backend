@@ -17,7 +17,7 @@ export const userTable = pgTable("user", {
   role: text("role").notNull(),
   email: text("email").notNull().unique(),
 
-  verified: boolean("boolean").default(false),
+  verified: boolean("verified").default(false),
 
   profilePicture: text("profile_picture"),
   bannerPicture: text("banner_picture"),
