@@ -1,5 +1,5 @@
 {
-  "id": "2446c8e2-c759-410f-8dd6-4e3f0946d277",
+  "id": "ced51f70-bb68-4994-a712-6ac5b4b52670",
   "prevId": "7da9cb13-b7ec-41a0-8947-d347ab6dc62e",
   "version": "7",
   "dialect": "postgresql",
@@ -570,8 +570,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "boolean": {
-          "name": "boolean",
+        "verified": {
+          "name": "verified",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
