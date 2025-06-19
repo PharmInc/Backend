@@ -50,6 +50,20 @@
       "when": 1750229761640,
       "tag": "0006_tricky_ulik",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1750314521049,
+      "tag": "0007_flowery_human_torch",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1750314611259,
+      "tag": "0008_normal_nighthawk",
+      "breakpoints": true
     }
   ]
 }

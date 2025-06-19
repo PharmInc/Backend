@@ -1,5 +1,5 @@
 import { uuid, timestamp, text, pgTable, integer } from "drizzle-orm/pg-core";
-import { userTable } from "../user";
+import { authTable } from "../auth";
 
 export const basePost = {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -12,7 +12,7 @@ export const basePost = {
   shares: integer("shares"),
   saves: integer("saves"),
 
-  userId: uuid("user_id").references(() => userTable.id),
+  auth: uuid("auth_id").references(() => authTable.id),
 };
 
 export const postTable = pgTable("post", {
