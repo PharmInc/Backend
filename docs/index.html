@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Pharminc API Documentation</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@stoplight/elements/styles.min.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      elements-api {
+        height: 100vh;
+      }
+      .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        font-size: 18px;
+      }
+      .error {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: Arial, sans-serif;
+        color: red;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading" class="loading">Loading API Documentation...</div>
+    <div id="error" class="error" style="display: none">
+      <div>
+        <h2>Failed to Load API Documentation</h2>
+        <p>Please check if the services are running and try again.</p>
+      </div>
+    </div>
+    <elements-api id="docs" style="display: none"></elements-api>
+
+    <script src="https://unpkg.com/@stoplight/elements/web-components.min.js"></script>
+    <script>
+      // Service endpoints
+      const services = {
+        auth: "https://auth.api.pharminc.in/openapi",
+        user: "https://user.api.pharminc.in/openapi",
+        network: "https://network.api.pharminc.in/openapi",
+        background: "https://background.api.pharminc.in/openapi",
+        institute: "https://institute.api.pharminc.in/openapi",
+        job: "https://job.api.pharminc.in/openapi",
+        post: "https://post.api.pharminc.in/openapi",
+      };
+
+      async function fetchAllSpecs() {
+        try {
+          // Fetch all service specs
+          const fetchPromises = Object.entries(services).map(
+            async ([name, url]) => {
+              try {
+                const response = await fetch(url);
+                const spec = await response.json();
+                return { name, spec };
+              } catch (error) {
+                console.error(`Failed to fetch ${name} spec:`, error);
+                return { name, spec: null };
+              }
+            }
+          );
+
+          const results = await Promise.all(fetchPromises);
+
+          // Create combined spec
+          const combinedSpec = {
+            openapi: "3.0.0",
+            info: {
+              title: "Pharminc API Documentation",
+              version: "1.0.0",
+              description: `
+![](https://raw.githubusercontent.com/PharmInc/.github/refs/heads/main/temp.png)
+
+# Pharminc API Documentation
+
+Complete API documentation for all Pharminc services including authentication, user management, networking, background services, and more.
+
+## Services Overview
+
+- **Auth Service** - Authentication and authorization
+- **User Service** - User profiles and management  
+- **Network Service** - Social connections and follows
+- **Background Service** - Education and experience records
+- **Institute Service** - Educational institutions management
+- **Job Service** - Job postings and applications
+- **Post Service** - Social media posts and content
+
+## Base URLs
+
+- Auth: \`https://auth.api.pharminc.in\`
+- User: \`https://user.api.pharminc.in\`
+- Network: \`https://network.api.pharminc.in\`
+- Background: \`https://background.api.pharminc.in\`
+- Institute: \`https://institute.api.pharminc.in\`
+- Job: \`https://job.api.pharminc.in\`
+- Post: \`https://post.api.pharminc.in\`
+            `,
+              contact: {
+                name: "Pharminc Support",
+                email: "pharminc.info@gmail.com",
+                url: "https://pharminc.in",
+              },
+              license: {
+                name: "MIT",
+                url: "https://spdx.org/licenses/MIT",
+              },
+            },
+            servers: [
+              {
+                url: "https://auth.api.pharminc.in",
+                description: "Auth Service",
+              },
+              {
+                url: "https://user.api.pharminc.in",
+                description: "User Service",
+              },
+              {
+                url: "https://network.api.pharminc.in",
+                description: "Network Service",
+              },
+              {
+                url: "https://background.api.pharminc.in",
+                description: "Background Service",
+              },
+              {
+                url: "https://institute.api.pharminc.in",
+                description: "Institute Service",
+              },
+              {
+                url: "https://job.api.pharminc.in",
+                description: "Job Service",
+              },
+              {
+                url: "https://post.api.pharminc.in",
+                description: "Post Service",
+              },
+            ],
+            paths: {},
+            components: {
+              schemas: {},
+              securitySchemes: {
+                Bearer: {
+                  type: "http",
+                  scheme: "bearer",
+                  bearerFormat: "JWT",
+                },
+              },
+            },
+            tags: [],
+          };
+
+          // Merge all service specs
+          const allTags = new Set();
+
+          results.forEach(({ name, spec }) => {
+            if (!spec) return;
+
+            // Add paths with original structure but server overrides
+            if (spec.paths) {
+              Object.entries(spec.paths).forEach(([path, methods]) => {
+                // Create a unique key for the combined spec to avoid conflicts
+                const pathKey = combinedSpec.paths[path]
+                  ? `${path}_${name}`
+                  : path;
+
+                // Clone the methods object
+                const updatedMethods = { ...methods };
+
+                // Update each HTTP method
+                Object.entries(updatedMethods).forEach(
+                  ([methodName, method]) => {
+                    if (typeof method === "object" && method !== null) {
+                      // Add service-specific server override
+                      method.servers = [
+                        {
+                          url: services[name].replace("/openapi", ""),
+                          description: `${
+                            name.charAt(0).toUpperCase() + name.slice(1)
+                          } Service`,
+                        },
+                      ];
+
+                      // Update operationId to include service name for uniqueness
+                      if (method.operationId) {
+                        method.operationId = `${name}_${method.operationId}`;
+                      }
+
+                      // Add service name to tags
+                      if (method.tags) {
+                        method.tags = method.tags.map(
+                          (tag) =>
+                            `${
+                              name.charAt(0).toUpperCase() + name.slice(1)
+                            } - ${tag}`
+                        );
+                      }
+                    }
+                  }
+                );
+
+                combinedSpec.paths[pathKey] = updatedMethods;
+              });
+            }
+
+            // Merge schemas with cleaner names
+            if (spec.components?.schemas) {
+              Object.entries(spec.components.schemas).forEach(
+                ([schemaName, schema]) => {
+                  // Clean up schema names by removing redundant service prefixes
+                  let cleanSchemaName = schemaName;
+                  const servicePrefix =
+                    name.charAt(0).toUpperCase() + name.slice(1);
+
+                  // Handle cases like "AuthAuthSchema" -> "AuthSchema", "UserUserSchema" -> "UserSchema"
+                  if (schemaName.startsWith(servicePrefix + servicePrefix)) {
+                    cleanSchemaName = schemaName.replace(servicePrefix, "");
+                  }
+                  // Handle cases like "NetworkFollowSchema" -> "FollowSchema"
+                  else if (
+                    schemaName.startsWith(servicePrefix) &&
+                    schemaName !== servicePrefix + "Schema"
+                  ) {
+                    cleanSchemaName = schemaName.replace(servicePrefix, "");
+                  }
+
+                  // If there's a conflict, keep the original name
+                  if (
+                    combinedSpec.components.schemas[cleanSchemaName] &&
+                    cleanSchemaName !== schemaName
+                  ) {
+                    combinedSpec.components.schemas[schemaName] = schema;
+                  } else {
+                    combinedSpec.components.schemas[cleanSchemaName] = schema;
+                  }
+                }
+              );
+            }
+
+            // Collect tags
+            if (spec.tags) {
+              spec.tags.forEach((tag) => {
+                allTags.add(
+                  `${name.charAt(0).toUpperCase() + name.slice(1)} - ${
+                    tag.name
+                  }`
+                );
+              });
+            }
+          });
+
+          // Add collected tags
+          combinedSpec.tags = Array.from(allTags).map((tag) => ({ name: tag }));
+
+          return combinedSpec;
+        } catch (error) {
+          console.error("Error combining OpenAPI specs:", error);
+          throw error;
+        }
+      }
+
+      // Initialize documentation
+      async function initDocs() {
+        try {
+          const combinedSpec = await fetchAllSpecs();
+
+          // Hide loading
+          document.getElementById("loading").style.display = "none";
+
+          // Show docs
+          const docsElement = document.getElementById("docs");
+          docsElement.style.display = "block";
+
+          // Set the API spec
+          docsElement.apiDescriptionDocument = JSON.stringify(combinedSpec);
+          docsElement.router = "hash";
+          docsElement.layout = "sidebar";
+          docsElement.hideInternal = true;
+          docsElement.tryItCredentialsPolicy = "include";
+        } catch (error) {
+          console.error("Failed to initialize docs:", error);
+          document.getElementById("loading").style.display = "none";
+          document.getElementById("error").style.display = "flex";
+        }
+      }
+
+      // Start loading when page loads
+      window.addEventListener("DOMContentLoaded", initDocs);
+    </script>
+  </body>
+</html>
