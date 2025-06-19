@@ -1,16 +1,18 @@
-# Posts & Comments Service
+# Content Service
 
-A comprehensive content management service for posts and comments, built with Hono and OpenAPI. Supports hierarchical commenting, engagement tracking, trending algorithms, and advanced search capabilities with full CRUD operations.
+A comprehensive content management service for posts, comments, and job applications, built with Hono and OpenAPI. Supports hierarchical commenting, engagement tracking, trending algorithms, job application management with role-based access, and advanced search capabilities with full CRUD operations.
 
 ## API Endpoints
 
 ### Posts - Private Routes (Authentication Required)
+
 - `POST /post` – Create a new post
 - `PUT /post/{id}` – Update your post
 - `DELETE /post/{id}` – Delete your post
 - `GET /posts/me` – Get your own posts with pagination
 
 ### Posts - Public Routes
+
 - `GET /post/{id}` – Get post by ID
 - `GET /post` – List all posts with pagination and sorting
 - `GET /post/user/{userId}` – Get all posts by specific user
@@ -19,6 +21,7 @@ A comprehensive content management service for posts and comments, built with Ho
 - `GET /post/popular` – Get popular posts by engagement metrics
 
 ### Comments - Private Routes (Authentication Required)
+
 - `POST /comment` – Create a new comment on a post
 - `PUT /comment/{id}` – Update your comment
 - `DELETE /comment/{id}` – Delete your comment
@@ -27,6 +30,7 @@ A comprehensive content management service for posts and comments, built with Ho
 - `GET /comments/me/post/{postId}` – Get your comments on specific post
 
 ### Comments - Public Routes
+
 - `GET /comment/{id}` – Get comment by ID
 - `GET /comment` – List all comments with pagination
 - `GET /comment/post/{postId}` – Get all comments on a post
@@ -35,14 +39,25 @@ A comprehensive content management service for posts and comments, built with Ho
 - `GET /comment/{commentId}/thread` – Get complete comment thread with nesting
 - `GET /comment/search` – Search comments with advanced filters
 
+### Applications - Private Routes (Authentication Required)
+
+- `POST /application` – Create a new job application (users only)
+- `PUT /application/{id}` – Update application (role-based permissions)
+- `DELETE /application/{id}` – Delete your application (users only)
+- `GET /application/{id}` – Get application by ID (role-based access)
+- `GET /application/my` – Get applications (users: own applications, institutes: all applications)
+- `GET /application/job/{jobId}` – Get applications for a job (institutes only)
+
 ### Response Codes
+
 - `200` – Success (retrieved/updated)
 - `201` – Created successfully
 - `204` – Deleted successfully
 - `400` – Bad request (validation failed)
 - `401` – Unauthorized
-- `403` – Forbidden (not your content)
+- `403` – Forbidden (not your content/insufficient permissions)
 - `404` – Content not found
+- `409` – Conflict (duplicate application)
 - `500` – Internal server error
 
 ## Database Structure
@@ -75,11 +90,31 @@ comment (
   postId     UUID NOT NULL REFERENCES post(id),
   parentId   UUID REFERENCES comment(id) -- NULL for top-level comments
 );
+
+-- Job applications table
+application (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at      TIMESTAMP DEFAULT NOW(),
+  updated_at      TIMESTAMP DEFAULT NOW(),
+  jobId           UUID NOT NULL,
+  userId          UUID NOT NULL,
+  cover_letter    TEXT,
+  resume_url      TEXT,
+  portfolio_url   TEXT,
+  status          TEXT DEFAULT 'pending',
+  notes           TEXT,
+  additional_info JSONB,
+  applied_at      TIMESTAMP DEFAULT NOW(),
+  reviewed_at     TIMESTAMP,
+  responded_at    TIMESTAMP,
+  UNIQUE(userId, jobId) -- Prevent duplicate applications
+);
 ```
 
 ## Request/Response Schema
 
 ### Create Post Request
+
 ```json
 {
   "title": "Introduction to Machine Learning",
@@ -89,6 +124,7 @@ comment (
 ```
 
 ### Post Response
+
 ```json
 {
   "id": "f17e1c68-58b2-456f-94e9-123456789abc",
@@ -105,6 +141,7 @@ comment (
 ```
 
 ### Create Comment Request
+
 ```json
 {
   "content": "Great insights! Thanks for sharing.",
@@ -114,6 +151,7 @@ comment (
 ```
 
 ### Comment Response
+
 ```json
 {
   "id": "comment-uuid-here",
@@ -129,7 +167,47 @@ comment (
 }
 ```
 
+### Create Application Request
+
+```json
+{
+  "jobId": "job-uuid-here",
+  "cover_letter": "I am excited to apply for this position because...",
+  "resume_url": "https://example.com/resume.pdf",
+  "portfolio_url": "https://portfolio.example.com",
+  "additional_info": {
+    "expectedSalary": "80000",
+    "availableStartDate": "2024-03-01"
+  }
+}
+```
+
+### Application Response
+
+```json
+{
+  "id": "application-uuid-here",
+  "created_at": "2024-01-10T14:30:00Z",
+  "updated_at": "2024-01-10T14:30:00Z",
+  "jobId": "job-uuid-here",
+  "userId": "user-uuid-here",
+  "cover_letter": "I am excited to apply for this position because...",
+  "resume_url": "https://example.com/resume.pdf",
+  "portfolio_url": "https://portfolio.example.com",
+  "status": "pending",
+  "notes": null,
+  "additional_info": {
+    "expectedSalary": "80000",
+    "availableStartDate": "2024-03-01"
+  },
+  "applied_at": "2024-01-10T14:30:00Z",
+  "reviewed_at": null,
+  "responded_at": null
+}
+```
+
 ### Paginated Response
+
 ```json
 {
   "data": [
@@ -153,6 +231,7 @@ comment (
 ```
 
 ### Search Response with Filters
+
 ```json
 {
   "data": [...],
@@ -175,6 +254,7 @@ comment (
 ```
 
 ### Trending Posts Response
+
 ```json
 {
   "data": [
@@ -195,6 +275,7 @@ comment (
 ```
 
 ### Comment Thread Response
+
 ```json
 {
   "comment": {
@@ -222,37 +303,3 @@ comment (
   "totalReplies": 5
 }
 ```
-
-## Advanced Features
-
-### Trending Algorithm
-Posts and comments are ranked using engagement over time:
-```
-Trending Score = (reactions × 2 + shares × 3 + saves × 1) / days_since_creation
-```
-
-### Search Capabilities
-- **Full-text search** in titles and content
-- **Date range filtering** for time-based queries
-- **Engagement filtering** by reactions, shares, saves
-- **User-specific filtering** to find content by specific users
-- **Attachment filtering** to find posts with/without attachments
-- **Reply classification** to distinguish top-level vs nested comments
-
-### Comment Hierarchy
-- **Nested threading** with configurable depth limits
-- **Reply chains** with parent-child relationships
-- **Thread exploration** with complete conversation trees
-- **Efficient querying** for large comment structures
-
-### Engagement Metrics
-- **Reactions** – User likes/reactions to content
-- **Shares** – Content sharing across platforms
-- **Saves** – Users bookmarking content for later
-- **Combined metrics** for overall engagement scoring
-
-### Pagination & Performance
-- **Limit caps** at 100 items per page to prevent abuse
-- **Efficient counting** with separate count queries
-- **Index-optimized** queries for large datasets
-- **Lazy loading** support for hierarchical structures
