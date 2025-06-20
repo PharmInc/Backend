@@ -1,0 +1,23 @@
+services:
+  waitlist-api:
+    build: .
+    container_name: waitlist-api
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.waitlist-api.rule=Host(`waitlist.pharminc.in`)"
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: waitlist-postgres
+    environment:
+      - POSTGRES_DB=waitlist
+      - POSTGRES_USER=pharminc
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ${VOLUME}:/var/lib/postgresql/data
